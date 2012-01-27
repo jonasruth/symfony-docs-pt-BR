@@ -8,29 +8,50 @@ Beautiful URLs are an absolute must for any serious web application. This
 means leaving behind ugly URLs like ``index.php?article_id=57`` in favor
 of something like ``/read/intro-to-symfony``.
 
+URLs bonitas são uma necessidade absoluta para qualquer aplicação web séria. Isto
+significa deixar para trás URLs feias como ``index.php?article_id=57`` em favor
+de algo como ``/read/intro-to-symfony``.
+
 Having flexibility is even more important. What if you need to change the
 URL of a page from ``/blog`` to ``/news``? How many links should you need to
 hunt down and update to make the change? If you're using Symfony's router,
 the change is simple.
 
+Ter flexibilidade é ainda mais importante. E se você precisar alterar a URL de 
+uma página de ``/blog`` para ``/news``? Quantos links você vai precisar caçar e 
+atualizar para fazer a alteração? Se você estiver usando o router do Symfony, a 
+alteração é simples.
+
 The Symfony2 router lets you define creative URLs that you map to different
 areas of your application. By the end of this chapter, you'll be able to:
+
+O router do Symfony2 deixa você definir URLs criativas que você mapeia para 
+diferentes áreas da sua aplicação. Ao fim deste capítulo, você será capaz de:
 
 * Create complex routes that map to controllers
 * Generate URLs inside templates and controllers
 * Load routing resources from bundles (or anywhere else) 
 * Debug your routes
 
+* Criar rotas complexas que apontam aos controllers
+* Gerar URLs dentro de templates e controllers
+* **Carregar recursos de roteamento de bundles (ou qualquer outro lugar)** **VERIFICAR**
+* Debugar suas rotas
+
 .. index::
    single: Routing; Basics
 
-Routing in Action
------------------
+Routing em Ação
+---------------
 
 A *route* is a map from a URL pattern to a controller. For example, suppose
 you want to match any URL like ``/blog/my-post`` or ``/blog/all-about-symfony``
 and send it to a controller that can look up and render that blog entry.
 The route is simple:
+
+Um *route* é um apontamento de um padrão de URL para um controller. Por exemplo, 
+suponha que você quer combinar qualquer URL como ``/blog/my-post`` ou ``/blog/all-about-symfony`` 
+e enviar isso ao controller que pode procurar e mostrar esta entrada do blog. A rota é simples:
 
 .. configuration-block::
 
@@ -72,10 +93,20 @@ the wildcard is given the name ``slug``. For the URL ``/blog/my-blog-post``,
 the ``slug`` variable gets a value of ``my-blog-post``, which is available
 for you to use in your controller (keep reading).
 
+O padrão definido pelo route ``blog_show`` funciona como ``/blog/*`` onde o 
+coringa é dado o nome ``slug``. Para a URL ``/blog/my-blog-post``, a variável 
+``slug`` pega o valor de ``my-blog-post``, que está disponível para você usar 
+no seu controller (continue lendo).
+
 The ``_controller`` parameter is a special key that tells Symfony which controller
 should be executed when a URL matches this route. The ``_controller`` string
 is called the :ref:`logical name<controller-string-syntax>`. It follows a
 pattern that points to a specific PHP class and method:
+
+O parâmetro ``_controller`` é uma chave especial que diz ao Symfony qual 
+controller deve ser executado quando uma URL combina com esta rota. A string 
+``_controller`` é chamada de :ref:`logical name<controller-string-syntax>`. 
+Ela segue um padrão que aponta para uma classe e método PHP específicos: 
 
 .. code-block:: php
 
@@ -100,14 +131,24 @@ Congratulations! You've just created your first route and connected it to
 a controller. Now, when you visit ``/blog/my-post``, the ``showAction`` controller
 will be executed and the ``$slug`` variable will be equal to ``my-post``.
 
+Parabéns! Você acabou de criar seu primeiro route e conectou ele a um controller. 
+Agora, quando você visitar ``/blog/my-post``, o controller ``showAction`` será 
+executado e a variável ``$slug`` será igual a ``my-post``.
+
 This is the goal of the Symfony2 router: to map the URL of a request to a
 controller. Along the way, you'll learn all sorts of tricks that make mapping
-even the most complex URLs easy. 
+even the most complex URLs easy.
+
+Isso é o objetivo do router do Symfony2: mapear a URL de uma requisição a um 
+controller. Ao longo do caminho, você vai aprender todos os tipos de truques 
+para tornar o mapeamento mesmo das mais complexas URLs fácil.
 
 .. index::
    single: Routing; Under the hood
 
 Routing: Under the Hood
+-----------------------
+Routing: Debaixo o capô
 -----------------------
 
 When a request is made to your application, it contains an address to the
@@ -115,12 +156,20 @@ exact "resource" that the client is requesting. This address is called the
 URL, (or URI), and could be ``/contact``, ``/blog/read-me``, or anything
 else. Take the following HTTP request for example:
 
+Quando uma requisição é feita à sua aplicação, ela contém um endereço para o 
+exato "recurso" que o cliente está requisitando. O endereço é chamado de URL, 
+(ou URI), e pode ser ``/contact``, ``/blog/read-me``, ou qualquer outra coisa. 
+Tome a seguinte requisição HTTP por exemplo:
+
 .. code-block:: text
 
     GET /blog/my-blog-post
 
 The goal of the Symfony2 routing system is to parse this URL and determine
 which controller should be executed. The whole process looks like this:
+
+O objetivo do sistema de routing do Symfony2 é de analisar essa URL e determinar 
+qual controller deve ser executado. O processo inteiro se parece como isso:
 
 #. The request is handled by the Symfony2 front controller (e.g. ``app.php``);
 
@@ -132,6 +181,16 @@ which controller should be executed. The whole process looks like this:
 #. The Symfony2 Kernel executes the controller, which ultimately returns
    a ``Response`` object.
 
+
+#. A requisição é manipulada pelo front controller do Symfony2 (ex. ``app.php``);
+
+#. O núcleo do Symfony2 (ex. Kernel) pede ao router para inspecionar a requisição;
+
+#. O router combina a URL recebida com um route específico e retorna informação 
+sobre  o route, incluindo o controller que deve ser executado;
+
+#. O Kernel do Symfony2 executa o controller, que finalmente retorna um objeto ``Response``.
+
 .. figure:: /images/request-flow.png
    :align: center
    :alt: Symfony2 request flow
@@ -139,16 +198,26 @@ which controller should be executed. The whole process looks like this:
    The routing layer is a tool that translates the incoming URL into a specific
    controller to execute.
 
+   A camada de routing é uma ferramenta que traduz a URL recebida em um controller 
+   específico a ser executado.
+
 .. index::
    single: Routing; Creating routes
 
 Creating Routes
 ---------------
+Criando Routes
+--------------
 
 Symfony loads all the routes for your application from a single routing configuration
 file. The file is usually ``app/config/routing.yml``, but can be configured
 to be anything (including an XML or PHP file) via the application configuration
 file:
+
+O Symfony carrega todas os routes para sua aplicação de um simples arquivo de 
+configuração de routing. O arquivo geralmente é ``app/config/routing.yml`` mas 
+pode ser configurado para ser qualquer coisa (incluindo um arquivo XML ou PHP) 
+através do arquivo de configuração da aplicação:
 
 .. configuration-block::
 
@@ -181,12 +250,23 @@ file:
     to include additional routing resources from inside the file. See the
     :ref:`routing-include-external-resources` section for more information.
 
+    Apesar de todas as rotas serem carregadas de um único arquivo, é uma 
+    prática comum incluir recursos de routing adicionais de dentro do 
+    arquivo. Veja a seção :ref:`routing-include-external-resources` para mais
+    informações.
+
 Basic Route Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~
+Configuração básica de Route
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Defining a route is easy, and a typical application will have lots of routes.
 A basic route consists of just two parts: the ``pattern`` to match and a
 ``defaults`` array:
+
+Definir um route é facil, e uma aplicação típica vai ter um monte de routes. Um 
+route básico consiste de somente duas partes: o ``padrão`` para combinar e um array 
+de ``defaults``:
 
 .. configuration-block::
 
@@ -227,14 +307,24 @@ controller. The ``_controller`` string is translated by Symfony2 into an
 actual PHP function and executed. That process will be explained shortly
 in the :ref:`controller-string-syntax` section.
 
+Este route combina com a homepage (``/``) e aponta para o controller 
+``AcmeDemoBundle:Main:homepage``. A string ``_controler`` é transformada pelo 
+Symfony2 em uma função de verdade do PHP e executado. O processo será explicado 
+brevemente na seção :ref:`controller-string-syntax`.
+
 .. index::
    single: Routing; Placeholders
 
 Routing with Placeholders
 ~~~~~~~~~~~~~~~~~~~~~~~~~
+Routing com Placeholders
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Of course the routing system supports much more interesting routes. Many
 routes will contain one or more named "wildcard" placeholders:
+
+É claro que o sistema de routing suporta routes muito mais interessantes. 
+Muitos routes vão conter um ou mais dos chamados placeholders "coringa":
 
 .. configuration-block::
 
@@ -275,15 +365,31 @@ controller. In other words, if the URL is ``/blog/hello-world``, a ``$slug``
 variable, with a value of ``hello-world``, will be available in the controller.
 This can be used, for example, to load the blog post matching that string.
 
+O padrão vai combinar qualquer coisa que pareça com ``/blog/*``. Ainda melhor, 
+o valor combinando com o placeholder ``{slug}`` vai estar disponível dentro do 
+controller. Em outras palavras, se a URL é ``/blog/hello-word``, uma variável 
+``$slug``, com o valor de ``hello-world``, estará disponível no controller. Isso 
+pode ser usado, por exemplo, para carregar o post do blog que combina com esta string.
+
 The pattern will *not*, however, match simply ``/blog``. That's because,
 by default, all placeholders are required. This can be changed by adding
 a placeholder value to the ``defaults`` array.
 
+O padrão *não* vai combinar com um simples ``/blog``. Isso porque, por padrão, 
+todos os placeholders são obrigatórios. Isto pode ser alterado adicionando um 
+valor ao placeholder no array ``defaults``.
+
 Required and Optional Placeholders
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Placeholders Obrigatórios e Opcionais
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To make things more exciting, add a new route that displays a list of all
 the available blog posts for this imaginary blog application:
+
+Para tornar as coisas mais empolgantes, adicione um novo route que mostra 
+uma lista de todos os posts disponíveis do blog para essa aplicação de blog 
+imaginária:
 
 .. configuration-block::
 
@@ -323,6 +429,11 @@ and will only match the exact URL ``/blog``. But what if you need this route
 to support pagination, where ``/blog/2`` displays the second page of blog
 entries? Update the route to have a new ``{page}`` placeholder:
 
+Até agora, esse route está tão simples quanto é possível - ele não contém 
+placeholders e somente vai combinar com a exata URL ``/blog``. Mas e se você 
+precisar que essa rota suporte paginação, onde ``/blog/2`` mostra a segunda página 
+de entradas do blog? Atualize o route para ter um placeholder ``{page}`` novo:
+
 .. configuration-block::
 
     .. code-block:: yaml
@@ -360,11 +471,21 @@ Like the ``{slug}`` placeholder before, the value matching ``{page}`` will
 be available inside your controller. Its value can be used to determine which
 set of blog posts to display for the given page.
 
+Assim como o placeholder ``{slug}`` anterior, o valor combinando com ``{page}`` 
+estará disponível dentro do controller. Seu valor poderá ser utilizado para 
+determinar qual conjunto de posts do blog será exibido para a página passada.
+
 But hold on! Since placeholders are required by default, this route will
 no longer match on simply ``/blog``. Instead, to see page 1 of the blog,
 you'd need to use the URL ``/blog/1``! Since that's no way for a rich web
 app to behave, modify the route to make the ``{page}`` parameter optional.
 This is done by including it in the ``defaults`` collection:
+
+Mas espere aí! Uma vez que os placeholders são obrigatórios por padrão, este 
+route não vai mais combinar com um simples ``/blog``. Em vez disso, para ver 
+a página 1 do blog, você precisou usar a URL ``/blog/1``! Como essa não é a 
+maneira que um aplicativo web rico comporta-se, modifique seu route para fazer 
+do parâmetro ``{page}`` opcional. Isso é feito incluindo ele na coleção ``defaults``:
 
 .. configuration-block::
 
@@ -406,6 +527,11 @@ longer required. The URL ``/blog`` will match this route and the value of
 the ``page`` parameter will be set to ``1``. The URL ``/blog/2`` will also
 match, giving the ``page`` parameter a value of ``2``. Perfect.
 
+Ao adicionar ``page`` à chave ``defaults``, o placeholder ``{page}`` não é mais 
+obrigatório. A URL ``/blog`` vai combinar com esse route e o valor do parâmetro 
+``page`` será definido para ``1``. A URL ``/blog/2`` também vai combinar, passando 
+ao parâmetro o valor ``2``. Perfeito.
+
 +---------+------------+
 | /blog   | {page} = 1 |
 +---------+------------+
@@ -419,8 +545,12 @@ match, giving the ``page`` parameter a value of ``2``. Perfect.
 
 Adding Requirements
 ~~~~~~~~~~~~~~~~~~~
+Adicionando Requerimentos
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Take a quick look at the routes that have been created so far:
+
+Dê uma olhada rápida nas rotas que foram criadas até agora:
 
 .. configuration-block::
 
@@ -476,6 +606,13 @@ will *never* be matched. Instead, a URL like ``/blog/my-blog-post`` will match
 the first route (``blog``) and return a nonsense value of ``my-blog-post``
 to the ``{page}`` parameter.
 
+Você poderia apontar o problema? Perceba que ambas rotas possuem padrões que
+combinam URL's que pareçam com ``/blog/*``. O router do Symfony vai sempre
+escolher o **primeiro** route que combine com o que procura. Em outras palavras,
+o route ``blog_show`` **nunca** combinará. Em vez disso, uma URL como 
+``/blog/my-blog-post`` vai combinar com o primeiro route (``blog``) e retornar
+um valor absurdo de ``my-blog-post`` ao parâmetro ``{page}``.  
+
 +--------------------+-------+-----------------------+
 | URL                | route | parameters            |
 +====================+=======+=======================+
@@ -488,6 +625,11 @@ The answer to the problem is to add route *requirements*. The routes in this
 example would work perfectly if the ``/blog/{page}`` pattern *only* matched
 URLs where the ``{page}`` portion is an integer. Fortunately, regular expression
 requirements can easily be added for each parameter. For example:
+
+A solução do problema é adicionar *requisitos* de route. Os routes nesse exemplo 
+podem funcionar perfeitamente se o padrão ``/blog/{page}`` combinar *apenas* URLs
+onde a porção ``{page}`` é um inteiro. Felizmente, requisitos em forma de expressões
+regulares podem ser facilmente adicionados para cada parâmetro. Por exemplo:
 
 .. configuration-block::
 
