@@ -148,7 +148,7 @@ para tornar o mapeamento mesmo das mais complexas URLs fácil.
 
 Routing: Under the Hood
 -----------------------
-Routing: Debaixo o capô
+Routing: Debaixo do capô
 -----------------------
 
 When a request is made to your application, it contains an address to the
@@ -545,7 +545,7 @@ ao parâmetro o valor ``2``. Perfeito.
 
 Adding Requirements
 ~~~~~~~~~~~~~~~~~~~
-Adicionando Requerimentos
+Adicionando Requisitos
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Take a quick look at the routes that have been created so far:
@@ -677,8 +677,16 @@ will still match on a URL like ``/blog/2`` (because 2 is a number), but it
 will no longer match a URL like ``/blog/my-blog-post`` (because ``my-blog-post``
 is *not* a number).
 
+Um requerimento ``\d+`` é uma expressão regular que diz que o valor de ``{page} ``
+deve ser um dígito (ex. um número). O route ``blog`` vai continuar combinando
+com uma URL como ``/blog/2`` (porque 2 é um número), mas ele não mais combinará
+com uma URL como ``/blog/my-blog-post`` (porque ``my-blog-post`` *não* é un número).
+
 As a result, a URL like ``/blog/my-blog-post`` will now properly match the
 ``blog_show`` route.
+
+Em consequência, uma URL como ``/blog/my-blog-post`` combinará convenientemente com
+o route ``blog_show``.
 
 +--------------------+-----------+-----------------------+
 | URL                | route     | parameters            |
@@ -688,18 +696,31 @@ As a result, a URL like ``/blog/my-blog-post`` will now properly match the
 | /blog/my-blog-post | blog_show | {slug} = my-blog-post |
 +--------------------+-----------+-----------------------+
 
-.. sidebar:: Earlier Routes always Win
+.. sidebar:: Os primeiros Routes sempre vencem
 
     What this all means is that the order of the routes is very important.
     If the ``blog_show`` route were placed above the ``blog`` route, the
     URL ``/blog/2`` would match ``blog_show`` instead of ``blog`` since the
     ``{slug}`` parameter of ``blog_show`` has no requirements. By using proper
     ordering and clever requirements, you can accomplish just about anything.
+    
+    O que isso tudo significa é que a ordem dos routes é muito importante.
+    Se o route ``blog_show``foi colocada acima do route ``blog``, a URL
+    ``/blog/2`` combinaria com ``blog_show`` ao invés de ``blog`` uma vez que
+    o parâmetro ``{slug}`` do ``blog_show`` não tem requisitos. Usando
+    a ordenação apropriada e requisitos inteligentes, você pode fazer
+    praticamente qualquer coisa.
+     
 
 Since the parameter requirements are regular expressions, the complexity
 and flexibility of each requirement is entirely up to you. Suppose the homepage
 of your application is available in two different languages, based on the
 URL:
+
+Considerando que os requisitos dos parêmetros são expressões regulares, a complexidade
+e flexibilidade de cada requisito está inteiramente em suas mãos. Suponha que
+a homepage da sua aplicação está disponível em dois idiomas diferentes, baseado
+na URL:
 
 .. configuration-block::
 
@@ -744,6 +765,9 @@ URL:
 For incoming requests, the ``{culture}`` portion of the URL is matched against
 the regular expression ``(en|fr)``.
 
+Nas requisições recebidas, a porção da URL ``{culture}`` é combinada com a 
+expressão regular ``(en|fr)``.
+
 +-----+--------------------------+
 | /   | {culture} = en           |
 +-----+--------------------------+
@@ -754,17 +778,35 @@ the regular expression ``(en|fr)``.
 | /es | *won't match this route* |
 +-----+--------------------------+
 
++-----+------------------------------+
+| /   | {culture} = en               |
++-----+------------------------------+
+| /en | {culture} = en               |
++-----+------------------------------+
+| /fr | {culture} = fr               |
++-----+------------------------------+
+| /es | *não combina com este route* |
++-----+------------------------------+
+
 .. index::
    single: Routing; Method requirement
 
 Adding HTTP Method Requirements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Adicionando requisitos de Método HTTP
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 In addition to the URL, you can also match on the *method* of the incoming
 request (i.e. GET, HEAD, POST, PUT, DELETE). Suppose you have a contact form
 with two controllers - one for displaying the form (on a GET request) and one
 for processing the form when it's submitted (on a POST request). This can
 be accomplished with the following route configuration:
+
+Adicionalmente à URL, você pode também combinar no *método* da requisição
+recebida (ex. GET, HEAD, POST, PUT, DELETE). Suponha que você tem um formulário
+de contrato com dois controllers - um para mostrar o formulário (em uma requisição
+GET) e um para processar o formulário quando ele é submetido (em uma requisição 
+POST). Isso pode ser feito com a seguinte configuração de route:
 
 .. configuration-block::
 
@@ -826,12 +868,25 @@ the first route will match only GET requests and the second route will match
 only POST requests. This means that you can display the form and submit the
 form via the same URL, while using distinct controllers for the two actions.
 
+Apesar do fato de que essas duas rotas tem padrões idênticos (``/contact``),
+o primeiro route vai combinar apenas requisições GET e o segunto route vai
+combinar somente requisições POST. Isso significa que você pode mostrar o 
+formulário e submeter o formulário através da mesma URL, enquanto usar 
+controllers diferentes para as duas ações.
+
 .. note::
     If no ``_method`` requirement is specified, the route will match on
     *all* methods.
+    
+    Se nenhum requisito ``_method`` é especificado, o route vai combinar
+    em *todos* os métodos.
 
 Like the other requirements, the ``_method`` requirement is parsed as a regular
 expression. To match ``GET`` *or* ``POST`` requests, you can use ``GET|POST``.
+
+Assim como outros requisitos, o requisito ``_method`` é interpretado como
+uma expressão regular. Para combinar requisições ``GET`` *ou* ``POST``, você
+pode usar ``GET|POST``.
 
 .. index::
    single: Routing; Advanced example
@@ -841,10 +896,16 @@ expression. To match ``GET`` *or* ``POST`` requests, you can use ``GET|POST``.
 
 Advanced Routing Example
 ~~~~~~~~~~~~~~~~~~~~~~~~
+Exemplo Avançado de Routing 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 At this point, you have everything you need to create a powerful routing
 structure in Symfony. The following is an example of just how flexible the
 routing system can be:
+
+Neste ponto, você tem tudo o que precisa para criar uma poderosa estrutura
+de routing no Symfony. Em seguida um exemplo do quão flexível o sistema de 
+routing pode ser:
 
 .. configuration-block::
 
@@ -897,12 +958,18 @@ the URL is either ``en`` or ``fr`` and if the ``{year}`` is a number. This
 route also shows how you can use a period between placeholders instead of
 a slash. URLs matching this route might look like:
 
+Como você tem visto, este route vai somente combinar se a porção da URL 
+``{culture}`` ou é ``en`` ou ``fr`` e se o ``{year}`` é um número. Este
+route também mostra como você pode usar um ponto entre placeholders ao invés
+de uma barra. URLs que combinem com este route podem parecer como:
+
  * ``/articles/en/2010/my-post``
  * ``/articles/fr/2010/my-post.rss``
 
 .. _book-routing-format-param:
 
 .. sidebar:: The Special ``_format`` Routing Parameter
+.. sidebar:: O Parâmetro Especial ``_format`` do Routing
 
     This example also highlights the special ``_format`` routing parameter.
     When using this parameter, the matched value becomes the "request format"
@@ -912,13 +979,30 @@ a slash. URLs matching this route might look like:
     It can also be used in the controller to render a different template for
     each value of ``_format``. The ``_format`` parameter is a very powerful way
     to render the same content in different formats.
+    
+    Esse exemplo também destaca o parâmetro especial ``_format`` do routing.
+    Quando usado este parâmetro, o valor combinado torna-se o "formato da requisição"
+    do objeto ``Request``. Finalmente, o formato da requisição é usado para tais 
+    coisas como definir o ``Content-Type`` da resposta (ex. um formato de requisição 
+    ``json`` traduz-se em um ``Content-Type`` igual a ``application/json``). Isso pode 
+    também ser utilizado em um controller para desenhar um template diferente para
+    cada valor de ``_format``. O parâmetro ``_format`` é uma forma muito poderosa
+    de desenhar o mesmo conteúdo em formatos diferentes.
+    
 
 Special Routing Parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
+Parâmetros Especiais de Routing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As you've seen, each routing parameter or default value is eventually available
 as an argument in the controller method. Additionally, there are three parameters
 that are special: each adds a unique piece of functionality inside your application:
+
+Como você viu, cada parâmetro de routing ou valores padrões estão geralmente
+disponíveis como um argumento no método do controller. Adicionalmente, existem três
+parâmetros que são especiais: cada um adiciona uma peça única de funcionalidade
+dentro de sua aplicação:
 
 * ``_controller``: As you've seen, this parameter is used to determine which
   controller is executed when the route is matched;
@@ -926,6 +1010,13 @@ that are special: each adds a unique piece of functionality inside your applicat
 * ``_format``: Used to set the request format (:ref:`read more<book-routing-format-param>`);
 
 * ``_locale``: Used to set the locale on the session (:ref:`read more<book-translation-locale-url>`);
+
+* ``_controller``: Como você viu, este parâmetro é usado para determinar qual controller
+  é executado quando o route é combinado;
+
+* ``_format``: Usado para definir o formato da requisição (:ref:`leia mais<book-routing-format-param>`);
+
+* ``_locale``: Usado para definir o local na sessão (:ref:`leia mais<book-translation-locale-url>`);
 
 .. index::
    single: Routing; Controllers
@@ -935,6 +1026,8 @@ that are special: each adds a unique piece of functionality inside your applicat
 
 Controller Naming Pattern
 -------------------------
+Padrão de Nomenclatura de Controller
+------------------------------------
 
 Every route must have a ``_controller`` parameter, which dictates which
 controller should be executed when that route is matched. This parameter
@@ -942,9 +1035,17 @@ uses a simple string pattern called the *logical controller name*, which
 Symfony maps to a specific PHP method and class. The pattern has three parts,
 each separated by a colon:
 
+Cada route deve ter um parâmetro ``_controller``, que determina qual controller
+deve ser executado quando o route é combinado. Este parâmetro usa um padrão
+simples de string chamado *nome lógico de controller*, que o Symfony direciona
+a um método PHP específico e classe. O padrão possui três partes, cada uma
+separada por dois pontos:
+
     **bundle**:**controller**:**action**
 
 For example, a ``_controller`` value of ``AcmeBlogBundle:Blog:show`` means:
+
+Por exemplo, o valor de ``_controller`` de ``AcmeBlogBundle:Blog:show`` significa:
 
 +----------------+------------------+-------------+
 | Bundle         | Controller Class | Method Name |
@@ -953,6 +1054,8 @@ For example, a ``_controller`` value of ``AcmeBlogBundle:Blog:show`` means:
 +----------------+------------------+-------------+
 
 The controller might look like this:
+
+O controller pode parecer como isto:
 
 .. code-block:: php
 
@@ -972,10 +1075,18 @@ The controller might look like this:
 Notice that Symfony adds the string ``Controller`` to the class name (``Blog``
 => ``BlogController``) and ``Action`` to the method name (``show`` => ``showAction``).
 
+Perceba que o Symfony adiciona a string ``Controller`` ao nome da classe (``Blog`` 
+=> ``BlogController``) e ``Action`` ao nome do método (``show`` => ``showAction``).
+
 You could also refer to this controller using its fully-qualified class name
 and method: ``Acme\BlogBundle\Controller\BlogController::showAction``.
 But if you follow some simple conventions, the logical name is more concise
 and allows more flexibility.
+
+Você pode também referenciar este controller usando seu nome completo de classe e
+método: ``Acme\BlogBundle\Controller\BlogController::showAction``.
+Mas se você segue algumas simples convenções, o nome lógico é mais consiso e
+possibilita mais flexibilidade.
 
 .. note::
 
@@ -983,12 +1094,22 @@ and allows more flexibility.
    Symfony supports a third way of referring to a controller. This method
    uses just one colon separator (e.g. ``service_name:indexAction``) and
    refers to the controller as a service (see :doc:`/cookbook/controller/service`).
+   
+   Adicionamente ao utilizar o nome lógio ou o nome completo de classe, o
+   Symfony suporta uma terceira forma de referenciar a um controller. Este método
+   usa somente dois pontos como separador (ex. ``service_name:indexAction``) e
+   referencia ao controller como um serviço (veja :doc:`/cookbook/controller/service`).
 
 Route Parameters and Controller Arguments
 -----------------------------------------
+Parâmetros do Route e Argumentos de Controller
+----------------------------------------------
 
 The route parameters (e.g. ``{slug}``) are especially important because
 each is made available as an argument to the controller method:
+
+Os parâmetros de route (ex. ``{slug}``) são especialmente importantes
+porque cada um é disponibilizado como um argumento ao método do controller:
 
 .. code-block:: php
 
@@ -1001,10 +1122,19 @@ In reality, the entire ``defaults`` collection is merged with the parameter
 values to form a single array. Each key of that array is available as an
 argument on the controller.
 
+Na realidade, a inteira coleção ``defaults`` é mesclada com os valores
+dos parâmetros para formar um único array. Cada chave desse array está
+disponível como uma argumento no controller.
+
 In other words, for each argument of your controller method, Symfony looks
 for a route parameter of that name and assigns its value to that argument.
 In the advanced example above, any combination (in any order) of the following
 variables could be used as arguments to the ``showAction()`` method:
+
+Em outras palavras, para cada argumento do seu método do controller, o Symfony
+procurar por um parâmetro de route desse nome e atribui seu valor a esse 
+argumento. Em um exemplo avançado abaixo, qualquer combinação (em qualquer ordem)
+das seguintes variáveis pode ser usada como argumentos para o método ``showAction()``:
 
 * ``$culture``
 * ``$year``
@@ -1016,10 +1146,17 @@ Since the placeholders and ``defaults`` collection are merged together, even
 the ``$_controller`` variable is available. For a more detailed discussion,
 see :ref:`route-parameters-controller-arguments`.
 
+Uma vez que os placeholders e a coleção ``defaults`` são mesclados juntos, até mesmo
+a variável ``$_controller`` é disponibilizada. Para uma discussão mais detalhada,
+veja :ref:`route-parameters-controller-arguments`.
+
 .. tip::
 
     You can also use a special ``$_route`` variable, which is set to the
     name of the route that was matched.
+    
+    Você pode também usar uma variável especial ``$_route``, que é definida
+    com o nome do route que combinou.
 
 .. index::
    single: Routing; Importing routing resources
@@ -1028,11 +1165,18 @@ see :ref:`route-parameters-controller-arguments`.
 
 Including External Routing Resources
 ------------------------------------
+Incluindo Recursos de Routing Externos
+--------------------------------------
 
 All routes are loaded via a single configuration file - usually ``app/config/routing.yml``
 (see `Creating Routes`_ above). Commonly, however, you'll want to load routes
 from other places, like a routing file that lives inside a bundle. This can
 be done by "importing" that file:
+
+Todos os routes são carregados através de um simples arquivo de configuração - geralmente
+``app/config/routing.yml`` (see `Creating Routes`_ above). Normalmente, contudo, você vai
+querer carregar routes de outros lugares, como um arquivo de routing que está dentro de um
+bundle. Isso pode ser feito "importando" esse arquivo:
 
 .. configuration-block::
 
@@ -1068,11 +1212,18 @@ be done by "importing" that file:
 
    When importing resources from YAML, the key (e.g. ``acme_hello``) is meaningless.
    Just be sure that it's unique so no other lines override it.
+   
+   Quando importando recursos de um YAML, a chave (ex. ``acme_hello``) não tem importância.
+   Só tenha certeza que isto é único de forma que nenhuma outra linha sobrescreva esta. 
 
 The ``resource`` key loads the given routing resource. In this example the
 resource is the full path to a file, where the ``@AcmeHelloBundle`` shortcut
 syntax resolves to the path of that bundle. The imported file might look
 like this:
+
+A chave do ``recurso`` carrega o recurso de routing dado. Neste exemplo o 
+recurso é o caminho completo ao arquivo, onde a sintaxe do atalho ``@AcmeHelloBundle``
+decide o caminho desse bundle. O arquivo importado parece como isto:
 
 .. configuration-block::
 
@@ -1113,12 +1264,21 @@ like this:
 The routes from this file are parsed and loaded in the same way as the main
 routing file.
 
+Os routes deste arquivo são interpretados e carregados na mesma forma que o 
+arquivo principal do routing.
+
 Prefixing Imported Routes
 ~~~~~~~~~~~~~~~~~~~~~~~~~
+Prefixando Routes Importados
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can also choose to provide a "prefix" for the imported routes. For example,
 suppose you want the ``acme_hello`` route to have a final pattern of ``/admin/hello/{name}``
 instead of simply ``/hello/{name}``:
+
+Você pode também escolher prover um "prefixo" para os routes importados. Por exemplo,
+suponha que você queira que o route ``acme_hello`` tenha um padrão final de 
+``/admin/hello/{name}`` no lugar de simplesmente ``/hello/{name}``:
 
 .. configuration-block::
 
@@ -1154,11 +1314,16 @@ instead of simply ``/hello/{name}``:
 The string ``/admin`` will now be prepended to the pattern of each route
 loaded from the new routing resource.
 
+A string ``/admin`` agora será anteposta ao padrão de cada route carregado
+do novo recurso de routing.
+
 .. index::
    single: Routing; Debugging
 
 Visualizing & Debugging Routes
 ------------------------------
+Visualizando & Debugando Routes
+-------------------------------
 
 While adding and customizing routes, it's helpful to be able to visualize
 and get detailed information about your routes. A great way to see every route
