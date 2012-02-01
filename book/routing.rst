@@ -149,7 +149,7 @@ para tornar o mapeamento mesmo das mais complexas URLs fácil.
 Routing: Under the Hood
 -----------------------
 Routing: Debaixo do capô
------------------------
+------------------------
 
 When a request is made to your application, it contains an address to the
 exact "resource" that the client is requesting. This address is called the
@@ -546,7 +546,7 @@ ao parâmetro o valor ``2``. Perfeito.
 Adding Requirements
 ~~~~~~~~~~~~~~~~~~~
 Adicionando Requisitos
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 Take a quick look at the routes that have been created so far:
 
